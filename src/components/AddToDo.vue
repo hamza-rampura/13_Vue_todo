@@ -9,6 +9,7 @@
 
 <script>
 // import uuid from "uuid"
+// import { v4 as uuid } from 'uuid';
 export default {
     name: "AddToDo",
     data() {
@@ -20,12 +21,13 @@ export default {
         addToDo(e) {
             e.preventDefault();
             const newToDo = {
-                id: 123,
                 title: this.title,
                 completed: false
             }
+            console.log(newToDo.id);
             // Send to parent
-            this.$emit("add-todo", newToDo)
+            this.$emit("add-todo", newToDo);
+            this.title="";
         }
     }
 }

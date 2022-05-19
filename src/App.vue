@@ -11,6 +11,7 @@
 import TodosBase from "./components/TodosBase.vue";
 import HeaderMain from "./components/layout/HeaderMain.vue";
 import AddToDo from "./components/AddToDo.vue";
+import axios from "axios"
 
 export default {
   name: 'App',
@@ -22,30 +23,32 @@ export default {
   data() {
       return {
           todos: [
-              {
+              /* {
                   id: 1,
-                  title: "Hamza",
+                  title: "Task 1",
                   completed: false
               },
               {
                   id: 2,
-                  title: "Hamza2",
+                  title: "Task 2",
                   completed: false
               },
               {
                   id: 3,
-                  title: "Hamza3",
+                  title: "Task 3",
                   completed: false
-              }
+              } */
           ],
           test: "Hamza"
       }
   },
   methods: {
         deleteTodo(id) {
-            this.todos = this.todos.filter((todo)=>{
+          axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+          .then(() => {
+                this.todos = this.todos.filter((todo)=>{
                 return todo.id !== id;
-            })
+            })}).catch(err => console.log(err))
         },
         changeStatus(id) {
             for(let i = 0; i<=this.todos.length; i++) {
@@ -56,9 +59,19 @@ export default {
             }
         },
         addTodo(newTodo) {
-            this.todos = [...this.todos, newTodo]
-            console.log(this.todos)
+          const { title, completed } = newTodo;
+          axios.post("https://jsonplaceholder.typicode.com/todos", {
+            title,
+            completed
+          }).then(res => this.todos = [...this.todos, res.data]).catch(err => console.log(err))
+            /* this.todos = [...this.todos, newTodo]
+            console.log(this.todos) */
         }
+  },
+  created() {
+    axios.get("https://jsonplaceholder.typicode.com/todos?_limit=5").then((res)=>{
+      this.todos =res.data;
+    }).catch((err)=> console.log(err))
   }
 }
 </script>
